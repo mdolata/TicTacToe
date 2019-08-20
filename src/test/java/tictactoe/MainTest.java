@@ -7,9 +7,6 @@ import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class MainTest {
@@ -46,7 +43,7 @@ public class MainTest {
 
     @Test
     public void generateField() {
-        String field = Main.generateField(input);
+        String field = Main.Field.fromCells(input).getPrintableField();
         Assert.assertEquals(expectedResult, field);
     }
 }
