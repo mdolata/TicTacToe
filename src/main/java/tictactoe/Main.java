@@ -1,6 +1,7 @@
 package tictactoe;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static tictactoe.Main.State.*;
 
@@ -12,9 +13,10 @@ public class Main {
         Field field = Field.fromCells(cells);
         System.out.println(field.getPrintableField());
 //        System.out.println(field.getStateName());
+        BotPlayer easyBotPlayer = new EasyBotPlayer();
         do {
-            String nextMoveCoordinates = scanner.nextLine();
-            Either<String, Field> nextField = field.nextMove(nextMoveCoordinates);
+            System.out.println(easyBotPlayer.moveMessage());
+            Either<String, Field> nextField = easyBotPlayer.nextMove(field);
             if (nextField.isRight()) {
                 System.out.println(nextField.getRight().getPrintableField());
                 isMoveRight = true;
@@ -50,6 +52,7 @@ public class Main {
         private final State state;
         private final boolean isTwoWinners;
         private final Map<Coordinates, Integer> coordinateMapping;
+        private final List<Coordinates> possibleMoves;
 
         private Field(String[][] array, String cells) {
             this.array = array;
@@ -57,7 +60,15 @@ public class Main {
             this.winner = calculateWinner();
             this.isTwoWinners = this.winner.equals("I");
             this.state = validate();
-            coordinateMapping = createCoordinateMapping();
+            this.coordinateMapping = createCoordinateMapping();
+            this.possibleMoves = createPossibleMoves();
+        }
+
+        private List<Coordinates> createPossibleMoves() {
+            return coordinateMapping.keySet()
+                    .stream()
+                    .filter(coordinates -> cells.charAt(coordinateMapping.get(coordinates)) == ' ')
+                    .collect(Collectors.toList());
         }
 
         static Field fromCells(String cells) {
@@ -114,7 +125,7 @@ public class Main {
 
             if (orDefault < 0) {
                 return Either.left("Coordinates should be from 1 to 3!");
-            } else if (chars[orDefault] == 'X' || chars[orDefault] == 'O') {
+            } else if (!possibleMoves.contains(coordinatesEither.getRight())) {
                 return Either.left("This cell is occupied! Choose another one!");
             } else {
                 chars[orDefault] = nextSymbol;
@@ -227,6 +238,10 @@ public class Main {
 
             return isTooMuchSymbol || isThereTwoWinners;
         }
+
+        List<Coordinates> getPossibleMoves() {
+            return possibleMoves;
+        }
     }
 
     private static class Coordinates {
@@ -306,6 +321,36 @@ public class Main {
 
         R getRight() {
             return right;
+        }
+    }
+
+    interface BotPlayer {
+        Either<String, Main.Field> nextMove(Field field);
+        String moveMessage();
+    }
+
+    static class EasyBotPlayer implements BotPlayer {
+
+        private final Random random;
+
+        EasyBotPlayer() {
+            random = new Random();
+        }
+
+        @Override
+        public Either<String, Field> nextMove(Field field) {
+            List<Coordinates> possibleMoves = field.getPossibleMoves();
+            Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
+            Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates);
+            if (nextMove.isRight()) {
+                return Either.right(nextMove.getRight());
+            }
+            return Either.left("Something went wrong with bot player");
+        }
+
+        @Override
+        public String moveMessage() {
+            return "Making move level \"easy\"";
         }
     }
 }
