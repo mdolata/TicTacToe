@@ -22,9 +22,9 @@ public class EasyLevelMoveTest {
     @Parameterized.Parameters
     public static Collection fields() {
         return Arrays.asList(new Object[][]{
-                {"  XO  OX ", new Main.EasyBotPlayer()},
-                {"  XO  OX ", new Main.EasyBotPlayer()},
-                {"  XO  OX ", new Main.EasyBotPlayer()}
+                {"  XO  OX ", new Main.EasyBotPlayer("X")},
+                {"  XO  OX ", new Main.EasyBotPlayer("X")},
+                {"  XO  OX ", new Main.EasyBotPlayer("X")}
         });
 
     }

@@ -35,7 +35,7 @@ public class CoordinatesValidationTest {
     @Test
     public void generateField() {
         Main.Field inputField = Main.Field.fromCells(input);
-        Main.Either<String, Main.Field> nextField = inputField.nextMove(coordinates);
+        Main.Either<String, Main.Field> nextField = inputField.nextMove(coordinates, "X");
 
         Assert.assertTrue(nextField.isLeft());
         Assert.assertEquals(expectedResult, nextField.getLeft());

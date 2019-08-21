@@ -90,7 +90,7 @@ public class FirstHumanMoveTest {
         Main.Field field = Main.Field.fromCells(input);
         Assert.assertEquals(expectedField, field.getPrintableField());
 
-        Main.Either<String, Main.Field> nextField = field.nextMove(coordinates);
+        Main.Either<String, Main.Field> nextField = field.nextMove(coordinates, "X");
         Assert.assertTrue(nextField.isRight());
         Assert.assertEquals(expectedResultAfterMove, nextField.getRight().getPrintableField());
     }

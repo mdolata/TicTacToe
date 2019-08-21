@@ -13,7 +13,7 @@ public class Main {
         Field field = Field.fromCells(cells);
         System.out.println(field.getPrintableField());
 //        System.out.println(field.getStateName());
-        BotPlayer easyBotPlayer = new EasyBotPlayer();
+        BotPlayer easyBotPlayer = new EasyBotPlayer("X");
         do {
             System.out.println(easyBotPlayer.moveMessage());
             Either<String, Field> nextField = easyBotPlayer.nextMove(field);
@@ -57,11 +57,11 @@ public class Main {
         private Field(String[][] array, String cells) {
             this.array = array;
             this.cells = cells;
+            this.coordinateMapping = createCoordinateMapping();
+            this.possibleMoves = createPossibleMoves();
             this.winner = calculateWinner();
             this.isTwoWinners = this.winner.equals("I");
             this.state = validate();
-            this.coordinateMapping = createCoordinateMapping();
-            this.possibleMoves = createPossibleMoves();
         }
 
         private List<Coordinates> createPossibleMoves() {
@@ -113,8 +113,7 @@ public class Main {
             return UNKNOWN;
         }
 
-        Either<String, Field> nextMove(String coordinates) {
-            char nextSymbol = 'X';
+        Either<String, Field> nextMove(String coordinates, String nextSymbol) {
             char[] chars = cells.toCharArray();
             Either<String, Coordinates> coordinatesEither = Coordinates.fromString(coordinates);
             if (coordinatesEither.isLeft()) {
@@ -128,7 +127,7 @@ public class Main {
             } else if (!possibleMoves.contains(coordinatesEither.getRight())) {
                 return Either.left("This cell is occupied! Choose another one!");
             } else {
-                chars[orDefault] = nextSymbol;
+                chars[orDefault] = nextSymbol.charAt(0);
             }
 
             return Either.right(Field.fromCells(String.valueOf(chars)));
@@ -224,9 +223,7 @@ public class Main {
         }
 
         private boolean noMoreMoves() {
-            return Arrays.binarySearch(array[0], " ") < 0 &&
-                    Arrays.binarySearch(array[1], " ") < 0 &&
-                    Arrays.binarySearch(array[2], " ") < 0;
+            return possibleMoves.size() == 0;
         }
 
         private Boolean isImpossibleState() {
@@ -332,8 +329,10 @@ public class Main {
     static class EasyBotPlayer implements BotPlayer {
 
         private final Random random;
+        private final String symbol;
 
-        EasyBotPlayer() {
+        EasyBotPlayer(String symbol) {
+            this.symbol = symbol;
             random = new Random();
         }
 
@@ -341,7 +340,7 @@ public class Main {
         public Either<String, Field> nextMove(Field field) {
             List<Coordinates> possibleMoves = field.getPossibleMoves();
             Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
-            Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates);
+            Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates, symbol);
             if (nextMove.isRight()) {
                 return Either.right(nextMove.getRight());
             }
