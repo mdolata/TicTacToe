@@ -12,7 +12,9 @@ public class Main {
         String cells = scanner.nextLine().replace("\"", "");
         Field field = Field.fromCells(cells);
         System.out.println(field.getPrintableField());
-        System.out.println(field.getStateName());
+//        System.out.println(field.getStateName());
+        String nextMove = scanner.nextLine();
+        System.out.println(field.nextMove(nextMove).getPrintableField());
     }
 
     enum State {
@@ -36,12 +38,14 @@ public class Main {
 
     static class Field {
         private final String[][] array;
+        private final String cells;
         private final String winner;
         private final State state;
         private final boolean isTwoWinners;
 
-        private Field(String[][] array) {
+        private Field(String[][] array, String cells) {
             this.array = array;
+            this.cells = cells;
             this.winner = calculateWinner();
             this.isTwoWinners = this.winner.equals("I");
             this.state = validate();
@@ -55,7 +59,7 @@ public class Main {
                 }
             }
 
-            return new Field(array);
+            return new Field(array, cells);
         }
 
         String getStateName() {
@@ -87,6 +91,32 @@ public class Main {
                 return GAME_NOT_FINISHED;
             }
             return UNKNOWN;
+        }
+
+        Field nextMove(String coordinates) {
+            char nextSymbol = 'X';
+            char[] chars = cells.toCharArray();
+            if (coordinates.equals("1 1")){
+                chars[6] = nextSymbol;
+            } else if (coordinates.equals("1 2")){
+                chars[3] = nextSymbol;
+            } else if (coordinates.equals("1 3")){
+                chars[0] = nextSymbol;
+            } else if (coordinates.equals("2 1")){
+                chars[7] = nextSymbol;
+            } else if (coordinates.equals("2 2")){
+                chars[4] = nextSymbol;
+            } else if (coordinates.equals("2 3")){
+                chars[1] = nextSymbol;
+            } else if (coordinates.equals("3 1")) {
+                chars[8] = nextSymbol;
+            } else if (coordinates.equals("3 2")){
+                chars[5] = nextSymbol;
+            } else if (coordinates.equals("3 3")){
+                chars[2] = nextSymbol;
+            }
+
+            return Field.fromCells(String.valueOf(chars));
         }
 
         private String calculateWinner() {
