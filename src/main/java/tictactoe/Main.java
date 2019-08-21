@@ -6,13 +6,22 @@ import static tictactoe.Main.State.*;
 
 public class Main {
     public static void main(String[] args) {
+        boolean isMoveRight = false;
         Scanner scanner = new Scanner(System.in);
         String cells = scanner.nextLine().replace("\"", "");
         Field field = Field.fromCells(cells);
         System.out.println(field.getPrintableField());
 //        System.out.println(field.getStateName());
-        String nextMove = scanner.nextLine();
-        System.out.println(field.nextMove(nextMove).getPrintableField());
+        do {
+            String nextMoveCoordinates = scanner.nextLine();
+            Either<String, Field> nextField = field.nextMove(nextMoveCoordinates);
+            if (nextField.isRight()) {
+                System.out.println(nextField.getRight().getPrintableField());
+                isMoveRight = true;
+            } else {
+                System.out.println(nextField.getLeft());
+            }
+        } while (!isMoveRight);
     }
 
     enum State {
@@ -93,31 +102,38 @@ public class Main {
             return UNKNOWN;
         }
 
-        Field nextMove(String coordinates) {
+        Either<String, Field> nextMove(String coordinates) {
             char nextSymbol = 'X';
             char[] chars = cells.toCharArray();
-            Integer orDefault = coordinateMapping.getOrDefault(new Coordinates(coordinates), -1);
+            Either<String, Coordinates> coordinatesEither = Coordinates.fromString(coordinates);
+            if (coordinatesEither.isLeft()) {
+                return Either.left(coordinatesEither.getLeft());
+            }
+
+            Integer orDefault = coordinateMapping.getOrDefault(coordinatesEither.getRight(), -1);
 
             if (orDefault < 0) {
-                System.out.println("error");
+                return Either.left("Coordinates should be from 1 to 3!");
+            } else if (chars[orDefault] == 'X' || chars[orDefault] == 'O') {
+                return Either.left("This cell is occupied! Choose another one!");
             } else {
                 chars[orDefault] = nextSymbol;
             }
 
-            return Field.fromCells(String.valueOf(chars));
+            return Either.right(Field.fromCells(String.valueOf(chars)));
         }
 
         private Map<Coordinates, Integer> createCoordinateMapping(){
             Map<Coordinates, Integer> map = new HashMap<>(9);
-            map.put(new Coordinates("1 1"), 6);
-            map.put(new Coordinates("1 2"), 3);
-            map.put(new Coordinates("1 3"), 0);
-            map.put(new Coordinates("2 1"), 7);
-            map.put(new Coordinates("2 2"), 4);
-            map.put(new Coordinates("2 3"), 1);
-            map.put(new Coordinates("3 1"), 8);
-            map.put(new Coordinates("3 2"), 5);
-            map.put(new Coordinates("3 3"), 2);
+            map.put(Coordinates.fromString("1 1").getRight(), 6);
+            map.put(Coordinates.fromString("1 2").getRight(), 3);
+            map.put(Coordinates.fromString("1 3").getRight(), 0);
+            map.put(Coordinates.fromString("2 1").getRight(), 7);
+            map.put(Coordinates.fromString("2 2").getRight(), 4);
+            map.put(Coordinates.fromString("2 3").getRight(), 1);
+            map.put(Coordinates.fromString("3 1").getRight(), 8);
+            map.put(Coordinates.fromString("3 2").getRight(), 5);
+            map.put(Coordinates.fromString("3 3").getRight(), 2);
             return map;
         }
 
@@ -218,11 +234,22 @@ public class Main {
         private final String coordinates;
         private final Integer x;
         private final Integer y;
-        private Coordinates(String coordinates) {
+        private Coordinates(String coordinates, int x, int y) {
             this.coordinates = coordinates;
+            this.x = x;
+            this.y = y;
+        }
+
+        static Either<String, Coordinates> fromString(String coordinates) {
             String[] split = coordinates.split(" ");
-            x = Integer.parseInt(split[0]);
-            y = Integer.parseInt(split[1]);
+            int x, y;
+            try {
+                x = Integer.parseInt(split[0]);
+                y = Integer.parseInt(split[1]);
+            } catch (NumberFormatException e) {
+                return Either.left("You should enter numbers!");
+            }
+            return Either.right(new Coordinates(coordinates, x, y));
         }
 
         @Override
@@ -243,6 +270,42 @@ public class Main {
             result = 31 * result + (x != null ? x.hashCode() : 0);
             result = 31 * result + (y != null ? y.hashCode() : 0);
             return result;
+        }
+    }
+
+    static class Either<L, R> {
+        private final L left;
+        private final R right;
+        private final boolean isRight;
+
+        private Either(L left, R right, boolean isRight) {
+            this.left = left;
+            this.right = right;
+            this.isRight = isRight;
+        }
+
+        static <L,R> Either<L,R> right(R right){
+            return new Either<>(null, right, true);
+        }
+
+        static <L,R> Either<L,R> left(L left){
+            return new Either<>(left, null, false);
+        }
+
+        boolean isLeft() {
+            return !isRight;
+        }
+
+        boolean isRight() {
+            return isRight;
+        }
+
+        L getLeft() {
+            return left;
+        }
+
+        R getRight() {
+            return right;
         }
     }
 }
