@@ -1,8 +1,6 @@
 package tictactoe;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 import static tictactoe.Main.State.*;
 
@@ -42,6 +40,7 @@ public class Main {
         private final String winner;
         private final State state;
         private final boolean isTwoWinners;
+        private final Map<Coordinates, Integer> coordinateMapping;
 
         private Field(String[][] array, String cells) {
             this.array = array;
@@ -49,6 +48,7 @@ public class Main {
             this.winner = calculateWinner();
             this.isTwoWinners = this.winner.equals("I");
             this.state = validate();
+            coordinateMapping = createCoordinateMapping();
         }
 
         static Field fromCells(String cells) {
@@ -96,27 +96,29 @@ public class Main {
         Field nextMove(String coordinates) {
             char nextSymbol = 'X';
             char[] chars = cells.toCharArray();
-            if (coordinates.equals("1 1")){
-                chars[6] = nextSymbol;
-            } else if (coordinates.equals("1 2")){
-                chars[3] = nextSymbol;
-            } else if (coordinates.equals("1 3")){
-                chars[0] = nextSymbol;
-            } else if (coordinates.equals("2 1")){
-                chars[7] = nextSymbol;
-            } else if (coordinates.equals("2 2")){
-                chars[4] = nextSymbol;
-            } else if (coordinates.equals("2 3")){
-                chars[1] = nextSymbol;
-            } else if (coordinates.equals("3 1")) {
-                chars[8] = nextSymbol;
-            } else if (coordinates.equals("3 2")){
-                chars[5] = nextSymbol;
-            } else if (coordinates.equals("3 3")){
-                chars[2] = nextSymbol;
+            Integer orDefault = coordinateMapping.getOrDefault(new Coordinates(coordinates), -1);
+
+            if (orDefault < 0) {
+                System.out.println("error");
+            } else {
+                chars[orDefault] = nextSymbol;
             }
 
             return Field.fromCells(String.valueOf(chars));
+        }
+
+        private Map<Coordinates, Integer> createCoordinateMapping(){
+            Map<Coordinates, Integer> map = new HashMap<>(9);
+            map.put(new Coordinates("1 1"), 6);
+            map.put(new Coordinates("1 2"), 3);
+            map.put(new Coordinates("1 3"), 0);
+            map.put(new Coordinates("2 1"), 7);
+            map.put(new Coordinates("2 2"), 4);
+            map.put(new Coordinates("2 3"), 1);
+            map.put(new Coordinates("3 1"), 8);
+            map.put(new Coordinates("3 2"), 5);
+            map.put(new Coordinates("3 3"), 2);
+            return map;
         }
 
         private String calculateWinner() {
@@ -208,6 +210,39 @@ public class Main {
             boolean isThereTwoWinners = (isSymbolXWin() && isSymbolOWin());
 
             return isTooMuchSymbol || isThereTwoWinners;
+        }
+    }
+
+    private static class Coordinates {
+
+        private final String coordinates;
+        private final Integer x;
+        private final Integer y;
+        private Coordinates(String coordinates) {
+            this.coordinates = coordinates;
+            String[] split = coordinates.split(" ");
+            x = Integer.parseInt(split[0]);
+            y = Integer.parseInt(split[1]);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Coordinates that = (Coordinates) o;
+
+            if (coordinates != null ? !coordinates.equals(that.coordinates) : that.coordinates != null) return false;
+            if (x != null ? !x.equals(that.x) : that.x != null) return false;
+            return y != null ? y.equals(that.y) : that.y == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = coordinates != null ? coordinates.hashCode() : 0;
+            result = 31 * result + (x != null ? x.hashCode() : 0);
+            result = 31 * result + (y != null ? y.hashCode() : 0);
+            return result;
         }
     }
 }
