@@ -41,7 +41,8 @@ public class FieldValidationTest {
 
     @Test
     public void generateField() {
-        String field = Main.FieldValidator.validate(Main.Field.fromCells(input)).getName();
-        Assert.assertEquals(expectedResult, field);
+        Main.Field field = Main.Field.fromCells(input);
+        String stateName = field.getStateName();
+        Assert.assertEquals(expectedResult, stateName);
     }
 }
