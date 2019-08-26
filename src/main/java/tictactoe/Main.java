@@ -7,35 +7,58 @@ import static tictactoe.Main.State.*;
 
 public class Main {
     public static void main(String[] args) {
-        boolean turn = true;
-
-        Field field = Field.fromCells("         ");
-        System.out.println(field.getPrintableField());
-
         Player humanPlayer = new HumanPlayer("X");
         Player easyBotPlayer = new EasyBotPlayer("O");
 
         Player[] players = new Player[] {humanPlayer, easyBotPlayer};
-        Player currentPlayer;
-        do {
-            if (turn) {
-                currentPlayer = players[0];
-            } else {
-                currentPlayer = players[1];
-            }
+        GameLoop gameLoop = new GameLoop(players);
+        State run = gameLoop.run();
 
-            System.out.println(currentPlayer.moveMessage());
-            Either<String, Field> nextField = currentPlayer.nextMove(field);
-            if (nextField.isRight()) {
-                turn = !turn;
-                field = nextField.getRight();
-                System.out.println(field.getPrintableField());
-            } else {
-                System.out.println(nextField.getLeft());
-            }
-        } while (! field.state.isTerminal());
+        System.out.println(run);
 
-        System.out.println(field.getStateName());
+    }
+
+    static class GameLoop {
+        private final Player[] players;
+        private int moveCount;
+        private Field field;
+
+        GameLoop(Player[] players) {
+            this.players = players;
+            moveCount = 0;
+            field = Field.fromCells("         ");
+        }
+
+        State run () {
+            Player currentPlayer;
+            do {
+                if (moveCount % 2 == 0) {
+                    currentPlayer = players[0];
+                } else {
+                    currentPlayer = players[1];
+                }
+
+                System.out.println(currentPlayer.moveMessage());
+                Either<String, Field> nextField = currentPlayer.nextMove(field);
+                if (nextField.isRight()) {
+                    moveCount++;
+                    field = nextField.getRight();
+                    System.out.println(field.getPrintableField());
+                } else {
+                    System.out.println(nextField.getLeft());
+                }
+            } while (! field.getState().isTerminal());
+
+            return field.getState();
+        }
+
+        int getMoveCount() {
+            return moveCount;
+        }
+
+        Field getField() {
+            return field;
+        }
     }
 
     enum State {
