@@ -11,10 +11,10 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class EasyLevelMoveTest {
     private final String input;
-    private final Main.BotPlayer botPlayer;
+    private final Main.Player botPlayer;
 
     public EasyLevelMoveTest(String input,
-                             Main.BotPlayer botPlayer) {
+                             Main.Player botPlayer) {
         this.input = input;
         this.botPlayer = botPlayer;
     }
@@ -32,7 +32,7 @@ public class EasyLevelMoveTest {
     @Test
     public void botPlayerMove() {
         Main.Field inputField = Main.Field.fromCells(input);
-        Main.BotPlayer botPlayer = this.botPlayer;
+        Main.Player botPlayer = this.botPlayer;
         Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());

@@ -7,23 +7,35 @@ import static tictactoe.Main.State.*;
 
 public class Main {
     public static void main(String[] args) {
-        boolean isMoveRight = false;
-        Scanner scanner = new Scanner(System.in);
-        String cells = scanner.nextLine().replace("\"", "");
-        Field field = Field.fromCells(cells);
+        boolean turn = true;
+
+        Field field = Field.fromCells("         ");
         System.out.println(field.getPrintableField());
-//        System.out.println(field.getStateName());
-        BotPlayer easyBotPlayer = new EasyBotPlayer("X");
+
+        Player humanPlayer = new HumanPlayer("X");
+        Player easyBotPlayer = new EasyBotPlayer("O");
+
+        Player[] players = new Player[] {humanPlayer, easyBotPlayer};
+        Player currentPlayer;
         do {
-            System.out.println(easyBotPlayer.moveMessage());
-            Either<String, Field> nextField = easyBotPlayer.nextMove(field);
+            if (turn) {
+                currentPlayer = players[0];
+            } else {
+                currentPlayer = players[1];
+            }
+
+            System.out.println(currentPlayer.moveMessage());
+            Either<String, Field> nextField = currentPlayer.nextMove(field);
             if (nextField.isRight()) {
-                System.out.println(nextField.getRight().getPrintableField());
-                isMoveRight = true;
+                turn = !turn;
+                field = nextField.getRight();
+                System.out.println(field.getPrintableField());
             } else {
                 System.out.println(nextField.getLeft());
             }
-        } while (!isMoveRight);
+        } while (! field.state.isTerminal());
+
+        System.out.println(field.getStateName());
     }
 
     enum State {
@@ -35,6 +47,13 @@ public class Main {
         UNKNOWN("Unknown");
 
         private final String name;
+        private static final List<State> terminalStates = new ArrayList<>();
+
+        static {
+            terminalStates.add(State.DRAW);
+            terminalStates.add(State.O_WINS);
+            terminalStates.add(State.X_WINS);
+        }
 
         State(String name) {
             this.name = name;
@@ -42,6 +61,10 @@ public class Main {
 
         public String getName() {
             return name;
+        }
+
+        public boolean isTerminal() {
+            return terminalStates.contains(this);
         }
     }
 
@@ -80,6 +103,10 @@ public class Main {
             }
 
             return new Field(array, cells);
+        }
+
+        State getState() {
+            return state;
         }
 
         String getStateName() {
@@ -151,12 +178,13 @@ public class Main {
             boolean isXWin = isSymbolWin("X");
             boolean isOWin = isSymbolWin("O");
 
-            if (isXWin && !isOWin)
-                return "X";
-            else if (!isXWin && isOWin)
-                return "O";
-            else if (isXWin && isOWin)
+            if (isXWin && isOWin) {
                 return "I";
+            } else if (isXWin) {
+                return "X";
+            } else if (isOWin) {
+                return "O";
+            }
 
             return "";
         }
@@ -321,12 +349,34 @@ public class Main {
         }
     }
 
-    interface BotPlayer {
+    interface Player {
         Either<String, Main.Field> nextMove(Field field);
         String moveMessage();
     }
 
-    static class EasyBotPlayer implements BotPlayer {
+    static class HumanPlayer implements Player {
+
+        private final String symbol;
+        private final Scanner scanner;
+
+        HumanPlayer(String symbol) {
+            this.symbol = symbol;
+            scanner = new Scanner(System.in);
+        }
+
+        @Override
+        public Either<String, Field> nextMove(Field field) {
+            String nextCoordinates = scanner.nextLine();
+            return field.nextMove(nextCoordinates, symbol);
+        }
+
+        @Override
+        public String moveMessage() {
+            return "Enter the coordinates: ";
+        }
+    }
+
+    static class EasyBotPlayer implements Player {
 
         private final Random random;
         private final String symbol;
@@ -342,7 +392,7 @@ public class Main {
             Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
             Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates, symbol);
             if (nextMove.isRight()) {
-                return Either.right(nextMove.getRight());
+                return nextMove;
             }
             return Either.left("Something went wrong with bot player");
         }
