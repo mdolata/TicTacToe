@@ -209,6 +209,24 @@ public class Main {
         private final Map<Coordinates, Integer> coordinateMapping;
         private final List<Coordinates> possibleMoves;
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Field field = (Field) o;
+
+            if (!Arrays.deepEquals(array, field.array)) return false;
+            return state == field.state;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Arrays.deepHashCode(array);
+            result = 31 * result + (state != null ? state.hashCode() : 0);
+            return result;
+        }
+
         private Field(String[][] array, String cells) {
             this.array = array;
             this.cells = cells;
@@ -239,6 +257,10 @@ public class Main {
 
         State getState() {
             return state;
+        }
+
+        String getWinner() {
+            return winner;
         }
 
         String getStateName() {
@@ -544,9 +566,49 @@ public class Main {
             random = new Random();
         }
 
-        @Override
         public Either<String, Field> nextMove(Field field) {
+            List<Coordinates> possibleMoves = field.getPossibleMoves();
+            Either<String, Field> nextMove1 = canIWinInNextMove(field);
+            if (nextMove1.isRight) return nextMove1;
+
+            Either<String, Field> nextMove2 = canOpponentWinInNextMove(field);
+            if (nextMove2.isRight) return nextMove2;
+
+            Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
+            Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates, symbol);
+            if (nextMove.isRight()) {
+                return nextMove;
+            }
             return Either.left("Something went wrong with bot player");
+        }
+
+        private Either<String, Field> canOpponentWinInNextMove(Field field) {
+            List<Coordinates> possibleMoves = field.getPossibleMoves();
+            for (Coordinates possibleMove : possibleMoves) {
+                String opponentSymbol = otherSymbol();
+                Either<String, Field> nextMove = field.nextMove(possibleMove.coordinates, opponentSymbol);
+                if (nextMove.getRight().getWinner().equals(opponentSymbol)) {
+                    return field.nextMove(possibleMove.coordinates, symbol);
+                }
+            }
+            return Either.left("");
+        }
+
+        private Either<String, Field> canIWinInNextMove(Field field) {
+            List<Coordinates> possibleMoves = field.getPossibleMoves();
+            for (Coordinates possibleMove : possibleMoves) {
+                Either<String, Field> nextMove = field.nextMove(possibleMove.coordinates, symbol);
+                if (nextMove.getRight().getWinner().equals(symbol)) {
+                    return nextMove;
+                }
+            }
+            return Either.left("");
+        }
+
+        //TODO coupling on symbol value
+        private String otherSymbol(){
+            if (symbol.equals("X")) return "O";
+            else return "X";
         }
 
         @Override

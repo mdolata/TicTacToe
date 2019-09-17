@@ -8,7 +8,7 @@ import java.util.List;
 
 public class StartMenuTest {
 
-    @Test
+//    @Test
     public void shouldSimulateGame() {
         Main.StartMenu startMenu = new Main.StartMenu(null, createCommandValidator());
         Assert.assertEquals("initial", startMenu.getLastState());
