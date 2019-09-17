@@ -8,28 +8,32 @@ import static tictactoe.Main.State.*;
 
 public class Main {
     public static void main(String[] args) {
-        StartMenu startMenu = new StartMenu();
+        List<String> supportedFunctionalCommands = new ArrayList<>();
+        supportedFunctionalCommands.add("start");
+        supportedFunctionalCommands.add("exit");
+        List<String> supportedLevelCommands = new ArrayList<>();
+        supportedLevelCommands.add("user");
+        supportedLevelCommands.add("easy");
+
+        CommandValidator commandValidator = new CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
+
+
+        StartMenu startMenu = new StartMenu(new Scanner(System.in), commandValidator);
         startMenu.start();
 
     }
 
     static class StartMenu {
-
-        private final Scanner scanner;
         private AtomicBoolean isRunning;
-        private List<String> supportedLevelCommands;
-        private List<String> supportedFunctionalCommands;
+        private final Scanner scanner;
+        private final CommandValidator commandValidator;
+        private String lastState;
 
-        public StartMenu() {
-            scanner = new Scanner(System.in);
+        public StartMenu(Scanner scanner, CommandValidator commandValidator) {
+            this.scanner = scanner;
+            this.commandValidator = commandValidator;
             isRunning = new AtomicBoolean(true);
-            supportedLevelCommands = new ArrayList<>();
-            supportedFunctionalCommands = new ArrayList<>();
-            supportedFunctionalCommands.add("start");
-            supportedFunctionalCommands.add("exit");
-            supportedLevelCommands.add("user");
-            supportedLevelCommands.add("easy");
-
+            lastState = "initial";
         }
 
         public void start() {
@@ -37,26 +41,52 @@ public class Main {
                 System.out.println("Input command: ");
                 String command = scanner.nextLine();
 
-                Either<String, String[]> validation = commandsValidation(command);
-
-                if (validation.isLeft()) {
-                    System.out.println(validation.getLeft());
-                } else if ("exit".equals(validation.getRight()[0])) {
-                    isRunning.set(false);
-                } else if ("start".equals(validation.getRight()[0])) {
-                    String[] commands = validation.getRight();
-                    Player player1 = PlayerFactory.create(commands[1], "X");
-                    Player player2 = PlayerFactory.create(commands[2], "O");
-
-
-                    GameLoop gameLoop = new GameLoop(new Player[]{player1, player2});
-                    State run = gameLoop.run();
-                    System.out.println(run);
-                }
+                validateAndRun(command);
             }
         }
 
-        private Either<String, String[]> commandsValidation(String command) {
+        public String validateAndRun(String command) {
+            Either<String, String[]> validation = commandValidator.validate(command);
+
+            if (validation.isLeft()) {
+                System.out.println(validation.getLeft());
+                lastState = validation.getLeft();
+            } else if ("exit".equals(validation.getRight()[0])) {
+                isRunning.set(false);
+                lastState = "exiting";
+            } else if ("start".equals(validation.getRight()[0])) {
+                String[] commands = validation.getRight();
+                Player player1 = PlayerFactory.create(commands[1], "X");
+                Player player2 = PlayerFactory.create(commands[2], "O");
+
+                GameLoop gameLoop = new GameLoop(new Player[]{player1, player2});
+                State run = gameLoop.run();
+                System.out.println(run);
+                lastState = "game ended";
+            }
+            return lastState;
+        }
+
+        public boolean isRunning(){
+            return isRunning.get();
+        }
+
+        public String getLastState() {
+            return lastState;
+        }
+    }
+
+    static class CommandValidator {
+        private final List<String> supportedLevelCommands;
+        private final List<String> supportedFunctionalCommands;
+
+        CommandValidator(List<String> supportedLevelCommands, List<String> supportedFunctionalCommands) {
+            this.supportedLevelCommands = supportedLevelCommands;
+            this.supportedFunctionalCommands = supportedFunctionalCommands;
+        }
+
+
+        public Either<String, String[]> validate(String command) {
             String[] commands = Arrays.stream(command.split(" "))
                     .filter(this::isSupport)
                     .toArray(String[]::new);
@@ -70,8 +100,8 @@ public class Main {
             }
 
             if (supportedFunctionalCommands.contains(commands[0]) &&
-            supportedLevelCommands.contains(commands[1]) &&
-            supportedLevelCommands.contains(commands[2])) {
+                    supportedLevelCommands.contains(commands[1]) &&
+                    supportedLevelCommands.contains(commands[2])) {
                 return Either.right(commands);
             }
 

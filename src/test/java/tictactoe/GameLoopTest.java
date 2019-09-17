@@ -14,7 +14,6 @@ public class GameLoopTest {
             Main.GameLoop gameLoop = new Main.GameLoop(new Main.Player[]{firstBotPlayer, secondBotPlayer});
             Main.State state = gameLoop.run();
 
-            System.out.println(state);
             Assert.assertTrue("Minimum moves -> 5", gameLoop.getMoveCount() >= 5);
             Assert.assertTrue("Maximum moves -> 9", gameLoop.getMoveCount() <= 9);
             Assert.assertTrue("Final state should be terminal state", state.isTerminal());

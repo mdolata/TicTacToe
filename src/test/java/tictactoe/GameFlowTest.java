@@ -15,7 +15,6 @@ public class GameFlowTest {
             Main.Player secondBotPlayer = new Main.EasyBotPlayer("O");
             int movesCounter = 0;
             boolean firstPlayerTurn = false;
-            System.out.println(field.getPrintableField());
             while (field.getStateName().equals(State.GAME_NOT_FINISHED.getName())) {
                 movesCounter++;
                 Main.Player currentPlayer;
@@ -26,7 +25,6 @@ public class GameFlowTest {
                     currentPlayer = secondBotPlayer;
                 }
 
-                System.out.println(currentPlayer.moveMessage());
                 Main.Either<String, Main.Field> nextMove = currentPlayer.nextMove(field);
 
                 if (nextMove.isLeft()) {
@@ -35,11 +33,9 @@ public class GameFlowTest {
 
                 field = nextMove.getRight();
 
-                System.out.println(field.getPrintableField());
                 firstPlayerTurn = !firstPlayerTurn;
             }
 
-            System.out.println(field.getStateName());
             Assert.assertTrue("Minimum moves -> 5", movesCounter >= 5);
             Assert.assertTrue("Maximum moves -> 9", movesCounter <= 9);
             Assert.assertTrue("Final state should be terminal state", field.getState().isTerminal());
