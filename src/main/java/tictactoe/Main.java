@@ -120,6 +120,7 @@ public class Main {
             switch (playerType) {
                 case "user": return new HumanPlayer(symbol);
                 case "easy": return new EasyBotPlayer(symbol);
+                case "medium": return new MediumBotPlayer(symbol);
                 //TODO remove exception
                 default: throw new RuntimeException();
             }
@@ -531,6 +532,26 @@ public class Main {
         @Override
         public String moveMessage() {
             return "Making move level \"easy\"";
+        }
+    }
+    static class MediumBotPlayer implements Player {
+
+        private final Random random;
+        private final String symbol;
+
+        MediumBotPlayer(String symbol) {
+            this.symbol = symbol;
+            random = new Random();
+        }
+
+        @Override
+        public Either<String, Field> nextMove(Field field) {
+            return Either.left("Something went wrong with bot player");
+        }
+
+        @Override
+        public String moveMessage() {
+            return "Making move level \"medium\"";
         }
     }
 }

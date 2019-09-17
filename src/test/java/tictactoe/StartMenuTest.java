@@ -22,6 +22,10 @@ public class StartMenuTest {
         Assert.assertEquals("game ended", startMenu.getLastState());
         Assert.assertTrue(startMenu.isRunning());
 
+        startMenu.validateAndRun("start easy medium");
+        Assert.assertEquals("game ended", startMenu.getLastState());
+        Assert.assertTrue(startMenu.isRunning());
+
         startMenu.validateAndRun("exit");
         Assert.assertEquals("exiting", startMenu.getLastState());
         Assert.assertFalse(startMenu.isRunning());
@@ -39,6 +43,7 @@ public class StartMenuTest {
         List<String> supportedLevelCommands = new ArrayList<>();
         supportedLevelCommands.add("user");
         supportedLevelCommands.add("easy");
+        supportedLevelCommands.add("medium");
 
         return new Main.CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
     }
