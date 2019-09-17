@@ -1,21 +1,99 @@
 package tictactoe;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static tictactoe.Main.State.*;
 
 public class Main {
     public static void main(String[] args) {
-        Player humanPlayer = new HumanPlayer("X");
-        Player easyBotPlayer = new EasyBotPlayer("O");
+        StartMenu startMenu = new StartMenu();
+        startMenu.start();
 
-        Player[] players = new Player[] {humanPlayer, easyBotPlayer};
-        GameLoop gameLoop = new GameLoop(players);
-        State run = gameLoop.run();
+    }
 
-        System.out.println(run);
+    static class StartMenu {
 
+        private final Scanner scanner;
+        private AtomicBoolean isRunning;
+        private List<String> supportedLevelCommands;
+        private List<String> supportedFunctionalCommands;
+
+        public StartMenu() {
+            scanner = new Scanner(System.in);
+            isRunning = new AtomicBoolean(true);
+            supportedLevelCommands = new ArrayList<>();
+            supportedFunctionalCommands = new ArrayList<>();
+            supportedFunctionalCommands.add("start");
+            supportedFunctionalCommands.add("exit");
+            supportedLevelCommands.add("user");
+            supportedLevelCommands.add("easy");
+
+        }
+
+        public void start() {
+            while (isRunning.get()) {
+                System.out.println("Input command: ");
+                String command = scanner.nextLine();
+
+                Either<String, String[]> validation = commandsValidation(command);
+
+                if (validation.isLeft()) {
+                    System.out.println(validation.getLeft());
+                } else if ("exit".equals(validation.getRight()[0])) {
+                    isRunning.set(false);
+                } else if ("start".equals(validation.getRight()[0])) {
+                    String[] commands = validation.getRight();
+                    Player player1 = PlayerFactory.create(commands[1], "X");
+                    Player player2 = PlayerFactory.create(commands[2], "O");
+
+
+                    GameLoop gameLoop = new GameLoop(new Player[]{player1, player2});
+                    State run = gameLoop.run();
+                    System.out.println(run);
+                }
+            }
+        }
+
+        private Either<String, String[]> commandsValidation(String command) {
+            String[] commands = Arrays.stream(command.split(" "))
+                    .filter(this::isSupport)
+                    .toArray(String[]::new);
+
+            if (commands.length == 1 && "exit".equals(commands[0])){
+                return Either.right(commands);
+            }
+
+            if (commands.length != 3) {
+                return Either.left("Bad parameters!");
+            }
+
+            if (supportedFunctionalCommands.contains(commands[0]) &&
+            supportedLevelCommands.contains(commands[1]) &&
+            supportedLevelCommands.contains(commands[2])) {
+                return Either.right(commands);
+            }
+
+            return Either.left("Bad parameters!");
+        }
+
+        private boolean isSupport(String command) {
+            return !Objects.nonNull(command) ||
+                    supportedLevelCommands.contains(command) ||
+                    supportedFunctionalCommands.contains(command);
+        }
+    }
+
+    static class PlayerFactory {
+        static Player create(String playerType, String symbol) {
+            switch (playerType) {
+                case "user": return new HumanPlayer(symbol);
+                case "easy": return new EasyBotPlayer(symbol);
+                //TODO remove exception
+                default: throw new RuntimeException();
+            }
+        }
     }
 
     static class GameLoop {
