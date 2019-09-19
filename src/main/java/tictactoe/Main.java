@@ -14,6 +14,7 @@ public class Main {
         List<String> supportedLevelCommands = new ArrayList<>();
         supportedLevelCommands.add("user");
         supportedLevelCommands.add("easy");
+        supportedLevelCommands.add("medium");
 
         CommandValidator commandValidator = new CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
 

@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class GameLoopTest {
 
-//    @Test
+    @Test
     public void gameFlowTest() {
         for (int i = 0; i < 1000; i++) {
 
