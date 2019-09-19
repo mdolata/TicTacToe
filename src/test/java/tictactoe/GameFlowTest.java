@@ -3,6 +3,8 @@ package tictactoe;
 import org.junit.Assert;
 import org.junit.Test;
 import tictactoe.Main.State;
+import tictactoe.player.Player;
+import tictactoe.player.impl.EasyBotPlayer;
 
 public class GameFlowTest {
 
@@ -11,13 +13,13 @@ public class GameFlowTest {
         for (int i = 0; i < 1000; i++) {
 
             Main.Field field = Main.Field.fromCells("         ");
-            Main.Player firstBotPlayer = new Main.EasyBotPlayer("X");
-            Main.Player secondBotPlayer = new Main.EasyBotPlayer("O");
+            Player firstBotPlayer = new EasyBotPlayer("X");
+            Player secondBotPlayer = new EasyBotPlayer("O");
             int movesCounter = 0;
             boolean firstPlayerTurn = false;
             while (field.getStateName().equals(State.GAME_NOT_FINISHED.getName())) {
                 movesCounter++;
-                Main.Player currentPlayer;
+                Player currentPlayer;
 
                 if (firstPlayerTurn) {
                     currentPlayer = firstBotPlayer;

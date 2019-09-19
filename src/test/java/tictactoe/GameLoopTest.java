@@ -2,6 +2,8 @@ package tictactoe;
 
 import org.junit.Assert;
 import org.junit.Test;
+import tictactoe.player.Player;
+import tictactoe.player.impl.EasyBotPlayer;
 
 public class GameLoopTest {
 
@@ -9,9 +11,9 @@ public class GameLoopTest {
     public void gameFlowTest() {
         for (int i = 0; i < 1000; i++) {
 
-            Main.Player firstBotPlayer = new Main.EasyBotPlayer("X");
-            Main.Player secondBotPlayer = new Main.EasyBotPlayer("O");
-            Main.GameLoop gameLoop = new Main.GameLoop(new Main.Player[]{firstBotPlayer, secondBotPlayer});
+            Player firstBotPlayer = new EasyBotPlayer("X");
+            Player secondBotPlayer = new EasyBotPlayer("O");
+            Main.GameLoop gameLoop = new Main.GameLoop(new Player[]{firstBotPlayer, secondBotPlayer});
             Main.State state = gameLoop.run();
 
             Assert.assertTrue("Minimum moves -> 5", gameLoop.getMoveCount() >= 5);

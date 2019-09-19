@@ -1,5 +1,8 @@
 package tictactoe;
 
+import tictactoe.player.Player;
+import tictactoe.player.PlayerFactory;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -15,6 +18,7 @@ public class Main {
         supportedLevelCommands.add("user");
         supportedLevelCommands.add("easy");
         supportedLevelCommands.add("medium");
+        supportedLevelCommands.add("hard");
 
         CommandValidator commandValidator = new CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
 
@@ -116,18 +120,6 @@ public class Main {
         }
     }
 
-    static class PlayerFactory {
-        static Player create(String playerType, String symbol) {
-            switch (playerType) {
-                case "user": return new HumanPlayer(symbol);
-                case "easy": return new EasyBotPlayer(symbol);
-                case "medium": return new MediumBotPlayer(symbol);
-                //TODO remove exception
-                default: throw new RuntimeException();
-            }
-        }
-    }
-
     static class GameLoop {
         private final Player[] players;
         private int moveCount;
@@ -201,7 +193,7 @@ public class Main {
         }
     }
 
-    static class Field {
+    public static class Field {
         private final String[][] array;
         private final String cells;
         private final String winner;
@@ -260,7 +252,7 @@ public class Main {
             return state;
         }
 
-        String getWinner() {
+        public String getWinner() {
             return winner;
         }
 
@@ -295,7 +287,7 @@ public class Main {
             return UNKNOWN;
         }
 
-        Either<String, Field> nextMove(String coordinates, String nextSymbol) {
+        public Either<String, Field> nextMove(String coordinates, String nextSymbol) {
             char[] chars = cells.toCharArray();
             Either<String, Coordinates> coordinatesEither = Coordinates.fromString(coordinates);
             if (coordinatesEither.isLeft()) {
@@ -419,12 +411,12 @@ public class Main {
             return isTooMuchSymbol || isThereTwoWinners;
         }
 
-        List<Coordinates> getPossibleMoves() {
+        public List<Coordinates> getPossibleMoves() {
             return possibleMoves;
         }
     }
 
-    private static class Coordinates {
+    public static class Coordinates {
 
         private final String coordinates;
         private final Integer x;
@@ -433,6 +425,10 @@ public class Main {
             this.coordinates = coordinates;
             this.x = x;
             this.y = y;
+        }
+
+        public String getCoordinates() {
+            return coordinates;
         }
 
         static Either<String, Coordinates> fromString(String coordinates) {
@@ -468,7 +464,8 @@ public class Main {
         }
     }
 
-    static class Either<L, R> {
+    // todo remove this impl and add vavr
+    public static class Either<L, R> {
         private final L left;
         private final R right;
         private final boolean isRight;
@@ -483,7 +480,7 @@ public class Main {
             return new Either<>(null, right, true);
         }
 
-        static <L,R> Either<L,R> left(L left){
+        public static <L,R> Either<L,R> left(L left){
             return new Either<>(left, null, false);
         }
 
@@ -491,7 +488,7 @@ public class Main {
             return !isRight;
         }
 
-        boolean isRight() {
+        public boolean isRight() {
             return isRight;
         }
 
@@ -499,122 +496,8 @@ public class Main {
             return left;
         }
 
-        R getRight() {
+        public R getRight() {
             return right;
-        }
-    }
-
-    interface Player {
-        Either<String, Main.Field> nextMove(Field field);
-        String moveMessage();
-    }
-
-    static class HumanPlayer implements Player {
-
-        private final String symbol;
-        private final Scanner scanner;
-
-        HumanPlayer(String symbol) {
-            this.symbol = symbol;
-            scanner = new Scanner(System.in);
-        }
-
-        @Override
-        public Either<String, Field> nextMove(Field field) {
-            String nextCoordinates = scanner.nextLine();
-            return field.nextMove(nextCoordinates, symbol);
-        }
-
-        @Override
-        public String moveMessage() {
-            return "Enter the coordinates: ";
-        }
-    }
-
-    static class EasyBotPlayer implements Player {
-
-        private final Random random;
-        private final String symbol;
-
-        EasyBotPlayer(String symbol) {
-            this.symbol = symbol;
-            random = new Random();
-        }
-
-        @Override
-        public Either<String, Field> nextMove(Field field) {
-            List<Coordinates> possibleMoves = field.getPossibleMoves();
-            Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
-            Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates, symbol);
-            if (nextMove.isRight()) {
-                return nextMove;
-            }
-            return Either.left("Something went wrong with bot player");
-        }
-
-        @Override
-        public String moveMessage() {
-            return "Making move level \"easy\"";
-        }
-    }
-    static class MediumBotPlayer implements Player {
-
-        private final Random random;
-        private final String symbol;
-
-        MediumBotPlayer(String symbol) {
-            this.symbol = symbol;
-            random = new Random();
-        }
-
-        public Either<String, Field> nextMove(Field field) {
-            List<Coordinates> possibleMoves = field.getPossibleMoves();
-            Either<String, Field> nextMove1 = canIWinInNextMove(field);
-            if (nextMove1.isRight) return nextMove1;
-
-            Either<String, Field> nextMove2 = canOpponentWinInNextMove(field);
-            if (nextMove2.isRight) return nextMove2;
-
-            Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
-            Either<String, Field> nextMove = field.nextMove(nextCoordinates.coordinates, symbol);
-            if (nextMove.isRight()) {
-                return nextMove;
-            }
-            return Either.left("Something went wrong with bot player");
-        }
-
-        private Either<String, Field> canOpponentWinInNextMove(Field field) {
-            List<Coordinates> possibleMoves = field.getPossibleMoves();
-            for (Coordinates possibleMove : possibleMoves) {
-                String opponentSymbol = otherSymbol();
-                Either<String, Field> nextMove = field.nextMove(possibleMove.coordinates, opponentSymbol);
-                if (nextMove.getRight().getWinner().equals(opponentSymbol)) {
-                    return field.nextMove(possibleMove.coordinates, symbol);
-                }
-            }
-            return Either.left("");
-        }
-
-        private Either<String, Field> canIWinInNextMove(Field field) {
-            List<Coordinates> possibleMoves = field.getPossibleMoves();
-            for (Coordinates possibleMove : possibleMoves) {
-                Either<String, Field> nextMove = field.nextMove(possibleMove.coordinates, symbol);
-                if (nextMove.getRight().getWinner().equals(symbol)) {
-                    return nextMove;
-                }
-            }
-            return Either.left("");
-        }
-
-        //TODO coupling on symbol value
-        private String otherSymbol(){
-            if (symbol.equals("X")) return "O";
-            else return "X";
-        }
-
-        @Override
-        public String moveMessage() {
-            return "Making move level \"medium\"";
         }
     }
 }

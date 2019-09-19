@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.player.Player;
+import tictactoe.player.impl.MediumBotPlayer;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,11 +42,11 @@ public class MediumLevelBotTest {
     }
 
     @Test
-    public void mediumBodShouldMoveWithLogic() {
+    public void mediumBotShouldMoveWithLogic() {
         Main.Field inputField = Main.Field.fromCells(input);
         Main.Field expectedField = Main.Field.fromCells(expected);
 
-        Main.Player botPlayer = new Main.EasyBotPlayer("X");
+        Player botPlayer = new MediumBotPlayer("X");
         Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
@@ -54,10 +56,10 @@ public class MediumLevelBotTest {
     }
 
     @Test
-    public void mediumBodShouldMoveWithRandom() {
+    public void mediumBotShouldMoveWithRandom() {
         Main.Field inputField = Main.Field.fromCells("  X  OOX ");
 
-        Main.Player botPlayer = new Main.MediumBotPlayer("X");
+        Player botPlayer = new MediumBotPlayer("X");
         Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
