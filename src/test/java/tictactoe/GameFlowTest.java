@@ -5,6 +5,7 @@ import org.junit.Test;
 import tictactoe.Main.State;
 import tictactoe.player.Player;
 import tictactoe.player.impl.EasyBotPlayer;
+import tictactoe.util.Either;
 
 public class GameFlowTest {
 
@@ -27,7 +28,7 @@ public class GameFlowTest {
                     currentPlayer = secondBotPlayer;
                 }
 
-                Main.Either<String, Main.Field> nextMove = currentPlayer.nextMove(field);
+                Either<String, Main.Field> nextMove = currentPlayer.nextMove(field);
 
                 if (nextMove.isLeft()) {
                     throw new RuntimeException("Something went wrong");

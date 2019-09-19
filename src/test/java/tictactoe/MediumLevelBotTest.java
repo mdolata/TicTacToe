@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import tictactoe.player.Player;
 import tictactoe.player.impl.MediumBotPlayer;
+import tictactoe.util.Either;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,7 +48,7 @@ public class MediumLevelBotTest {
         Main.Field expectedField = Main.Field.fromCells(expected);
 
         Player botPlayer = new MediumBotPlayer("X");
-        Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
+        Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
         System.out.println(expectedField.getPrintableField());
@@ -60,7 +61,7 @@ public class MediumLevelBotTest {
         Main.Field inputField = Main.Field.fromCells("  X  OOX ");
 
         Player botPlayer = new MediumBotPlayer("X");
-        Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
+        Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
         Assert.assertNotEquals("No one can win in one move, random!", inputField, nextField.getRight());

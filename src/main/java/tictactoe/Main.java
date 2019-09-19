@@ -2,6 +2,7 @@ package tictactoe;
 
 import tictactoe.player.Player;
 import tictactoe.player.PlayerFactory;
+import tictactoe.util.Either;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -464,40 +465,4 @@ public class Main {
         }
     }
 
-    // todo remove this impl and add vavr
-    public static class Either<L, R> {
-        private final L left;
-        private final R right;
-        private final boolean isRight;
-
-        private Either(L left, R right, boolean isRight) {
-            this.left = left;
-            this.right = right;
-            this.isRight = isRight;
-        }
-
-        static <L,R> Either<L,R> right(R right){
-            return new Either<>(null, right, true);
-        }
-
-        public static <L,R> Either<L,R> left(L left){
-            return new Either<>(left, null, false);
-        }
-
-        boolean isLeft() {
-            return !isRight;
-        }
-
-        public boolean isRight() {
-            return isRight;
-        }
-
-        L getLeft() {
-            return left;
-        }
-
-        public R getRight() {
-            return right;
-        }
-    }
 }

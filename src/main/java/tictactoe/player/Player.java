@@ -1,8 +1,9 @@
 package tictactoe.player;
 
 import tictactoe.Main;
+import tictactoe.util.Either;
 
 public interface Player {
-    Main.Either<String, Main.Field> nextMove(Main.Field field);
+    Either<String, Main.Field> nextMove(Main.Field field);
     String moveMessage();
 }

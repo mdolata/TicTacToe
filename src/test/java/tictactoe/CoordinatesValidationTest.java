@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.util.Either;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public class CoordinatesValidationTest {
     @Test
     public void generateField() {
         Main.Field inputField = Main.Field.fromCells(input);
-        Main.Either<String, Main.Field> nextField = inputField.nextMove(coordinates, "X");
+        Either<String, Main.Field> nextField = inputField.nextMove(coordinates, "X");
 
         Assert.assertTrue(nextField.isLeft());
         Assert.assertEquals(expectedResult, nextField.getLeft());
