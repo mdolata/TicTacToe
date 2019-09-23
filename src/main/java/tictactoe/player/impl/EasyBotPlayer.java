@@ -1,6 +1,7 @@
 package tictactoe.player.impl;
 
-import tictactoe.Main;
+import tictactoe.board.Coordinate;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.util.Either;
 
@@ -18,10 +19,10 @@ public class EasyBotPlayer implements Player {
     }
 
     @Override
-    public Either<String, Main.Field> nextMove(Main.Field field) {
-        List<Main.Coordinates> possibleMoves = field.getPossibleMoves();
-        Main.Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
-        Either<String, Main.Field> nextMove = field.nextMove(nextCoordinates.getCoordinates(), symbol);
+    public Either<String, Field> nextMove(Field field) {
+        List<Coordinate> possibleMoves = field.getPossibleMoves();
+        Coordinate nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
+        Either<String, Field> nextMove = field.nextMove(nextCoordinates.getCoordinates(), symbol);
         if (nextMove.isRight()) {
             return nextMove;
         }

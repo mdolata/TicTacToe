@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.board.Field;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +44,7 @@ public class MainTest {
 
     @Test
     public void generateField() {
-        String field = Main.Field.fromCells(input).getPrintableField();
+        String field = Field.fromCells(input).getPrintableField();
         Assert.assertEquals(expectedResult, field);
     }
 }

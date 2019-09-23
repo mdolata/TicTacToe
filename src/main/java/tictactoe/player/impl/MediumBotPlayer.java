@@ -1,6 +1,7 @@
 package tictactoe.player.impl;
 
-import tictactoe.Main;
+import tictactoe.board.Coordinate;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.util.Either;
 
@@ -18,27 +19,27 @@ public class MediumBotPlayer implements Player {
     }
 
     @Override
-    public Either<String, Main.Field> nextMove(Main.Field field) {
-        List<Main.Coordinates> possibleMoves = field.getPossibleMoves();
-        Either<String, Main.Field> nextMove1 = canIWinInNextMove(field);
+    public Either<String, Field> nextMove(Field field) {
+        List<Coordinate> possibleMoves = field.getPossibleMoves();
+        Either<String, Field> nextMove1 = canIWinInNextMove(field);
         if (nextMove1.isRight()) return nextMove1;
 
-        Either<String, Main.Field> nextMove2 = canOpponentWinInNextMove(field);
+        Either<String, Field> nextMove2 = canOpponentWinInNextMove(field);
         if (nextMove2.isRight()) return nextMove2;
 
-        Main.Coordinates nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
-        Either<String, Main.Field> nextMove = field.nextMove(nextCoordinates.getCoordinates(), symbol);
+        Coordinate nextCoordinates = possibleMoves.get(random.nextInt(possibleMoves.size()));
+        Either<String, Field> nextMove = field.nextMove(nextCoordinates.getCoordinates(), symbol);
         if (nextMove.isRight()) {
             return nextMove;
         }
         return Either.left("Something went wrong with bot player");
     }
 
-    private Either<String, Main.Field> canOpponentWinInNextMove(Main.Field field) {
-        List<Main.Coordinates> possibleMoves = field.getPossibleMoves();
-        for (Main.Coordinates possibleMove : possibleMoves) {
+    private Either<String, Field> canOpponentWinInNextMove(Field field) {
+        List<Coordinate> possibleMoves = field.getPossibleMoves();
+        for (Coordinate possibleMove : possibleMoves) {
             String opponentSymbol = otherSymbol();
-            Either<String, Main.Field> nextMove = field.nextMove(possibleMove.getCoordinates(), opponentSymbol);
+            Either<String, Field> nextMove = field.nextMove(possibleMove.getCoordinates(), opponentSymbol);
             if (nextMove.getRight().getWinner().equals(opponentSymbol)) {
                 return field.nextMove(possibleMove.getCoordinates(), symbol);
             }
@@ -46,10 +47,10 @@ public class MediumBotPlayer implements Player {
         return Either.left("");
     }
 
-    private Either<String, Main.Field> canIWinInNextMove(Main.Field field) {
-        List<Main.Coordinates> possibleMoves = field.getPossibleMoves();
-        for (Main.Coordinates possibleMove : possibleMoves) {
-            Either<String, Main.Field> nextMove = field.nextMove(possibleMove.getCoordinates(), symbol);
+    private Either<String, Field> canIWinInNextMove(Field field) {
+        List<Coordinate> possibleMoves = field.getPossibleMoves();
+        for (Coordinate possibleMove : possibleMoves) {
+            Either<String, Field> nextMove = field.nextMove(possibleMove.getCoordinates(), symbol);
             if (nextMove.getRight().getWinner().equals(symbol)) {
                 return nextMove;
             }

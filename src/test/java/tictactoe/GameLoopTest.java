@@ -2,6 +2,7 @@ package tictactoe;
 
 import org.junit.Assert;
 import org.junit.Test;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.player.impl.EasyBotPlayer;
 
@@ -23,7 +24,7 @@ public class GameLoopTest {
         }
     }
 
-    private boolean isCondition(Main.Field field, int movesCounter) {
+    private boolean isCondition(Field field, int movesCounter) {
         if (field.getStateName().equals(Main.State.DRAW.getName()))
             return movesCounter == 9;
         return true;

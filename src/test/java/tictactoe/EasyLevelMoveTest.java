@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.player.impl.EasyBotPlayer;
 import tictactoe.util.Either;
@@ -34,9 +35,9 @@ public class EasyLevelMoveTest {
 
     @Test
     public void botPlayerMove() {
-        Main.Field inputField = Main.Field.fromCells(input);
+        Field inputField = Field.fromCells(input);
         Player botPlayer = this.botPlayer;
-        Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
+        Either<String, Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
         Assert.assertNotEquals(inputField, nextField.getRight());

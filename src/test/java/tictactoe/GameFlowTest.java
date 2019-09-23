@@ -3,6 +3,7 @@ package tictactoe;
 import org.junit.Assert;
 import org.junit.Test;
 import tictactoe.Main.State;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.player.impl.EasyBotPlayer;
 import tictactoe.util.Either;
@@ -13,7 +14,7 @@ public class GameFlowTest {
     public void gameFlowTest() {
         for (int i = 0; i < 1000; i++) {
 
-            Main.Field field = Main.Field.fromCells("         ");
+            Field field = Field.fromCells("         ");
             Player firstBotPlayer = new EasyBotPlayer("X");
             Player secondBotPlayer = new EasyBotPlayer("O");
             int movesCounter = 0;
@@ -28,7 +29,7 @@ public class GameFlowTest {
                     currentPlayer = secondBotPlayer;
                 }
 
-                Either<String, Main.Field> nextMove = currentPlayer.nextMove(field);
+                Either<String, Field> nextMove = currentPlayer.nextMove(field);
 
                 if (nextMove.isLeft()) {
                     throw new RuntimeException("Something went wrong");
@@ -46,7 +47,7 @@ public class GameFlowTest {
         }
     }
 
-    private boolean isCondition(Main.Field field, int movesCounter) {
+    private boolean isCondition(Field field, int movesCounter) {
         if (field.getStateName().equals(State.DRAW.getName()))
             return movesCounter == 9;
         return true;

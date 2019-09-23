@@ -1,6 +1,6 @@
 package tictactoe.player.impl;
 
-import tictactoe.Main;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.util.Either;
 
@@ -17,7 +17,7 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public Either<String, Main.Field> nextMove(Main.Field field) {
+    public Either<String, Field> nextMove(Field field) {
         String nextCoordinates = scanner.nextLine();
         return field.nextMove(nextCoordinates, symbol);
     }

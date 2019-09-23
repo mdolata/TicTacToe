@@ -1,6 +1,6 @@
 package tictactoe.player.impl;
 
-import tictactoe.Main;
+import tictactoe.board.Field;
 import tictactoe.player.Player;
 import tictactoe.player.PlayerFactory;
 import tictactoe.util.Either;
@@ -14,7 +14,7 @@ public class HardBotPlayer implements Player {
         delegate = PlayerFactory.create("medium", symbol);
     }
     @Override
-    public Either<String, Main.Field> nextMove(Main.Field field) {
+    public Either<String, Field> nextMove(Field field) {
         return delegate.nextMove(field);
     }
 
