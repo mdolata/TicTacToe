@@ -4,6 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.board.Field;
+import tictactoe.player.Player;
+import tictactoe.player.impl.MediumBotPlayer;
+import tictactoe.util.Either;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,25 +44,23 @@ public class MediumLevelBotTest {
     }
 
     @Test
-    public void mediumBodShouldMoveWithLogic() {
-        Main.Field inputField = Main.Field.fromCells(input);
-        Main.Field expectedField = Main.Field.fromCells(expected);
+    public void mediumBotShouldMoveWithLogic() {
+        Field inputField = Field.fromCells(input);
+        Field expectedField = Field.fromCells(expected);
 
-        Main.Player botPlayer = new Main.EasyBotPlayer("X");
-        Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
+        Player botPlayer = new MediumBotPlayer("X");
+        Either<String, Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
-        System.out.println(expectedField.getPrintableField());
-        System.out.println(nextField.getRight().getPrintableField());
         Assert.assertEquals(description, expectedField, nextField.getRight());
     }
 
     @Test
-    public void mediumBodShouldMoveWithRandom() {
-        Main.Field inputField = Main.Field.fromCells("  X  OOX ");
+    public void mediumBotShouldMoveWithRandom() {
+        Field inputField = Field.fromCells("  X  OOX ");
 
-        Main.Player botPlayer = new Main.MediumBotPlayer("X");
-        Main.Either<String, Main.Field> nextField = botPlayer.nextMove(inputField);
+        Player botPlayer = new MediumBotPlayer("X");
+        Either<String, Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
         Assert.assertNotEquals("No one can win in one move, random!", inputField, nextField.getRight());

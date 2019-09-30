@@ -2,7 +2,11 @@ package tictactoe;
 
 import org.junit.Assert;
 import org.junit.Test;
-import tictactoe.Main.State;
+import tictactoe.board.Field;
+import tictactoe.board.State;
+import tictactoe.player.Player;
+import tictactoe.player.impl.EasyBotPlayer;
+import tictactoe.util.Either;
 
 public class GameFlowTest {
 
@@ -10,14 +14,14 @@ public class GameFlowTest {
     public void gameFlowTest() {
         for (int i = 0; i < 1000; i++) {
 
-            Main.Field field = Main.Field.fromCells("         ");
-            Main.Player firstBotPlayer = new Main.EasyBotPlayer("X");
-            Main.Player secondBotPlayer = new Main.EasyBotPlayer("O");
+            Field field = Field.fromCells("         ");
+            Player firstBotPlayer = new EasyBotPlayer("X");
+            Player secondBotPlayer = new EasyBotPlayer("O");
             int movesCounter = 0;
             boolean firstPlayerTurn = false;
-            while (field.getStateName().equals(State.GAME_NOT_FINISHED.getName())) {
+            while (field.getStateName().equals(tictactoe.board.State.GAME_NOT_FINISHED.getName())) {
                 movesCounter++;
-                Main.Player currentPlayer;
+                Player currentPlayer;
 
                 if (firstPlayerTurn) {
                     currentPlayer = firstBotPlayer;
@@ -25,7 +29,7 @@ public class GameFlowTest {
                     currentPlayer = secondBotPlayer;
                 }
 
-                Main.Either<String, Main.Field> nextMove = currentPlayer.nextMove(field);
+                Either<String, Field> nextMove = currentPlayer.nextMove(field);
 
                 if (nextMove.isLeft()) {
                     throw new RuntimeException("Something went wrong");
@@ -43,7 +47,7 @@ public class GameFlowTest {
         }
     }
 
-    private boolean isCondition(Main.Field field, int movesCounter) {
+    private boolean isCondition(Field field, int movesCounter) {
         if (field.getStateName().equals(State.DRAW.getName()))
             return movesCounter == 9;
         return true;

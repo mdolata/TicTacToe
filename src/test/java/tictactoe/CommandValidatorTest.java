@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.util.Either;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,9 +16,9 @@ public class CommandValidatorTest {
 
     private Main.CommandValidator commandValidator = createCommandValidator();
     private final String command;
-    private final Main.Either<String, String[]> expectedResult;
+    private final Either<String, String[]> expectedResult;
 
-    public CommandValidatorTest(String command, Main.Either<String, String[]> expectedResult) {
+    public CommandValidatorTest(String command, Either<String, String[]> expectedResult) {
         this.command = command;
         this.expectedResult = expectedResult;
     }
@@ -32,17 +33,17 @@ public class CommandValidatorTest {
                 {"start exit", badParameters()},
                 {"exit user", badParameters()},
                 {"nope", badParameters()},
-                {"start user easy", Main.Either.right(new String[]{"start", "user", "easy"})},
-                {"start easy user", Main.Either.right(new String[]{"start", "easy", "user"})},
-                {"start easy easy", Main.Either.right(new String[]{"start", "easy", "easy"})},
-                {"exit", Main.Either.right(new String[]{"exit"})},
+                {"start user easy", Either.right(new String[]{"start", "user", "easy"})},
+                {"start easy user", Either.right(new String[]{"start", "easy", "user"})},
+                {"start easy easy", Either.right(new String[]{"start", "easy", "easy"})},
+                {"exit", Either.right(new String[]{"exit"})},
         });
 
     }
 
     @Test
     public void shouldPassCorrectCommands() {
-        Main.Either<String, String[]> actual = commandValidator.validate(command);
+        Either<String, String[]> actual = commandValidator.validate(command);
 
         if (actual.isRight()) {
             Assert.assertTrue(actual.isRight());
@@ -54,8 +55,8 @@ public class CommandValidatorTest {
     }
 
 
-    private static Main.Either<String, Object> badParameters() {
-        return Main.Either.left("Bad parameters!");
+    private static Either<String, Object> badParameters() {
+        return Either.left("Bad parameters!");
     }
 
     private Main.CommandValidator createCommandValidator() {

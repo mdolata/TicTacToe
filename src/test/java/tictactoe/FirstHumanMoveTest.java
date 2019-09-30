@@ -4,6 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.board.Field;
+import tictactoe.util.Either;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -87,10 +89,10 @@ public class FirstHumanMoveTest {
 
     @Test
     public void generateField() {
-        Main.Field field = Main.Field.fromCells(input);
+        Field field = Field.fromCells(input);
         Assert.assertEquals(expectedField, field.getPrintableField());
 
-        Main.Either<String, Main.Field> nextField = field.nextMove(coordinates, "X");
+        Either<String, Field> nextField = field.nextMove(coordinates, "X");
         Assert.assertTrue(nextField.isRight());
         Assert.assertEquals(expectedResultAfterMove, nextField.getRight().getPrintableField());
     }
