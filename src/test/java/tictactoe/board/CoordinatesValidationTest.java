@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.board;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,8 +26,8 @@ public class CoordinatesValidationTest {
     public static Collection fields(){
         return Arrays.asList(new Object[][]{
                 {" XXOO OX ", "1 1", "This cell is occupied! Choose another one!"},
-                {" XXOO OX ", "one", "You should enter numbers!"},
-                {" XXOO OX ", "one three", "You should enter numbers!"},
+                {" XXOO OX ", "one", "You should two enter numbers with one space!"},
+                {" XXOO OX ", "one three", "You should two enter numbers with one space!"},
                 {" XXOO OX ", "4 1", "Coordinate should be from 1 to 3!"},
                 {" XXOO OX ", "1 4", "Coordinate should be from 1 to 3!"}
         });

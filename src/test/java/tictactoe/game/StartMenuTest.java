@@ -1,9 +1,7 @@
-package tictactoe;
+package tictactoe.game;
 
 import org.junit.Assert;
 import org.junit.Test;
-import tictactoe.game.CommandValidator;
-import tictactoe.game.StartMenu;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.player;
 
 import org.junit.Assert;
 import org.junit.Test;
