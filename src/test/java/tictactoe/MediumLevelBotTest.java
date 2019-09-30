@@ -52,8 +52,6 @@ public class MediumLevelBotTest {
         Either<String, Field> nextField = botPlayer.nextMove(inputField);
 
         Assert.assertTrue(nextField.isRight());
-        System.out.println(expectedField.getPrintableField());
-        System.out.println(nextField.getRight().getPrintableField());
         Assert.assertEquals(description, expectedField, nextField.getRight());
     }
 

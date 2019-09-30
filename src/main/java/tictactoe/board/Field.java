@@ -1,18 +1,17 @@
 package tictactoe.board;
 
-import tictactoe.Main;
 import tictactoe.util.Either;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static tictactoe.Main.State.*;
+import static tictactoe.board.State.*;
 
 public class Field {
     private final String[][] array;
     private final String cells;
     private final String winner;
-    private final Main.State state;
+    private final State state;
     private final boolean isTwoWinners;
     private final Map<Coordinate, Integer> coordinateMapping;
     private final List<Coordinate> possibleMoves;
@@ -45,7 +44,7 @@ public class Field {
         return new Field(array, cells);
     }
 
-    public Main.State getState() {
+    public State getState() {
         return state;
     }
 
@@ -69,7 +68,7 @@ public class Field {
         return String.format("%s\n%s\n%s", horizontal, result.toString().trim(), horizontal);
     }
 
-    Main.State validate() {
+    State validate() {
         if (isImpossibleState()) {
             return IMPOSSIBLE;
         } else if (isSymbolXWin()) {

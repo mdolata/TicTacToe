@@ -2,8 +2,8 @@ package tictactoe;
 
 import org.junit.Assert;
 import org.junit.Test;
-import tictactoe.Main.State;
 import tictactoe.board.Field;
+import tictactoe.board.State;
 import tictactoe.player.Player;
 import tictactoe.player.impl.EasyBotPlayer;
 import tictactoe.util.Either;
@@ -19,7 +19,7 @@ public class GameFlowTest {
             Player secondBotPlayer = new EasyBotPlayer("O");
             int movesCounter = 0;
             boolean firstPlayerTurn = false;
-            while (field.getStateName().equals(State.GAME_NOT_FINISHED.getName())) {
+            while (field.getStateName().equals(tictactoe.board.State.GAME_NOT_FINISHED.getName())) {
                 movesCounter++;
                 Player currentPlayer;
 

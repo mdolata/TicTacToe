@@ -1,6 +1,7 @@
 package tictactoe;
 
 import tictactoe.board.Field;
+import tictactoe.board.State;
 import tictactoe.player.Player;
 import tictactoe.player.PlayerFactory;
 import tictactoe.util.Either;
@@ -159,36 +160,6 @@ public class Main {
 
         Field getField() {
             return field;
-        }
-    }
-
-    public enum State {
-        GAME_NOT_FINISHED("Game not finished"),
-        DRAW("Draw"),
-        X_WINS("X wins"),
-        O_WINS("O wins"),
-        IMPOSSIBLE("Impossible"),
-        UNKNOWN("Unknown");
-
-        private final String name;
-        private static final List<State> terminalStates = new ArrayList<>();
-
-        static {
-            terminalStates.add(State.DRAW);
-            terminalStates.add(State.O_WINS);
-            terminalStates.add(State.X_WINS);
-        }
-
-        State(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isTerminal() {
-            return terminalStates.contains(this);
         }
     }
 
