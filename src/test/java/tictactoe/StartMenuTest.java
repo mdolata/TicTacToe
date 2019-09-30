@@ -2,6 +2,8 @@ package tictactoe;
 
 import org.junit.Assert;
 import org.junit.Test;
+import tictactoe.game.CommandValidator;
+import tictactoe.game.StartMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ public class StartMenuTest {
 
     @Test
     public void shouldSimulateGame() {
-        Main.StartMenu startMenu = new Main.StartMenu(null, createCommandValidator());
+        StartMenu startMenu = new StartMenu(null, createCommandValidator());
         Assert.assertEquals("initial", startMenu.getLastState());
         Assert.assertTrue(startMenu.isRunning());
 
@@ -36,7 +38,8 @@ public class StartMenuTest {
 
     }
 
-    private Main.CommandValidator createCommandValidator() {
+    //todo same in CommandValidatorTest. move it to utils
+    private CommandValidator createCommandValidator() {
         List<String> supportedFunctionalCommands = new ArrayList<>();
         supportedFunctionalCommands.add("start");
         supportedFunctionalCommands.add("exit");
@@ -45,7 +48,7 @@ public class StartMenuTest {
         supportedLevelCommands.add("easy");
         supportedLevelCommands.add("medium");
 
-        return new Main.CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
+        return new CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
     }
 
 

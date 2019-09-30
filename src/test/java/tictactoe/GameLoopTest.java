@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import tictactoe.board.Field;
 import tictactoe.board.State;
+import tictactoe.game.GameLoop;
 import tictactoe.player.Player;
 import tictactoe.player.impl.EasyBotPlayer;
 
@@ -15,7 +16,7 @@ public class GameLoopTest {
 
             Player firstBotPlayer = new EasyBotPlayer("X");
             Player secondBotPlayer = new EasyBotPlayer("O");
-            Main.GameLoop gameLoop = new Main.GameLoop(new Player[]{firstBotPlayer, secondBotPlayer});
+            GameLoop gameLoop = new GameLoop(new Player[]{firstBotPlayer, secondBotPlayer});
             State state = gameLoop.run();
 
             Assert.assertTrue("Minimum moves -> 5", gameLoop.getMoveCount() >= 5);

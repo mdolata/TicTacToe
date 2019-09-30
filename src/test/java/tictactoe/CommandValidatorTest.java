@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import tictactoe.game.CommandValidator;
 import tictactoe.util.Either;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 @RunWith(Parameterized.class)
 public class CommandValidatorTest {
 
-    private Main.CommandValidator commandValidator = createCommandValidator();
+    private CommandValidator commandValidator = createCommandValidator();
     private final String command;
     private final Either<String, String[]> expectedResult;
 
@@ -59,7 +60,7 @@ public class CommandValidatorTest {
         return Either.left("Bad parameters!");
     }
 
-    private Main.CommandValidator createCommandValidator() {
+    private CommandValidator createCommandValidator() {
         List<String> supportedFunctionalCommands = new ArrayList<>();
         supportedFunctionalCommands.add("start");
         supportedFunctionalCommands.add("exit");
@@ -67,7 +68,7 @@ public class CommandValidatorTest {
         supportedLevelCommands.add("user");
         supportedLevelCommands.add("easy");
 
-        return new Main.CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
+        return new CommandValidator(supportedLevelCommands, supportedFunctionalCommands);
     }
 
 
