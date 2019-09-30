@@ -20,8 +20,8 @@ public class Coordinate {
         try {
             x = Integer.parseInt(split[0]);
             y = Integer.parseInt(split[1]);
-        } catch (NumberFormatException e) {
-            return Either.left("You should enter numbers!");
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            return Either.left("You should two enter numbers with one space!");
         }
         return Either.right(new Coordinate(coordinates, x, y));
     }
