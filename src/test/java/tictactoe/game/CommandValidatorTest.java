@@ -14,7 +14,7 @@ import java.util.List;
 @RunWith(Parameterized.class)
 public class CommandValidatorTest {
 
-    private CommandValidator commandValidator = createCommandValidator();
+    private final CommandValidator commandValidator = createCommandValidator();
     private final String command;
     private final Either<String, String[]> expectedResult;
 

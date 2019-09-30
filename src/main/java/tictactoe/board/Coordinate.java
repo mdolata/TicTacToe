@@ -43,15 +43,15 @@ public class Coordinate {
         Coordinate that = (Coordinate) o;
 
         if (coordinates != null ? !coordinates.equals(that.coordinates) : that.coordinates != null) return false;
-        if (x != null ? !x.equals(that.x) : that.x != null) return false;
-        return y != null ? y.equals(that.y) : that.y == null;
+        if (!x.equals(that.x)) return false;
+        return y.equals(that.y);
     }
 
     @Override
     public int hashCode() {
         int result = coordinates != null ? coordinates.hashCode() : 0;
-        result = 31 * result + (x != null ? x.hashCode() : 0);
-        result = 31 * result + (y != null ? y.hashCode() : 0);
+        result = 31 * result + x.hashCode();
+        result = 31 * result + y.hashCode();
         return result;
     }
 }

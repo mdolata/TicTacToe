@@ -4,7 +4,7 @@ import tictactoe.util.Tuple;
 
 import java.util.*;
 
-public class CoordinateMapping {
+class CoordinateMapping {
     private static final Map<Coordinate, Integer> COORDINATE_MAPPING = createCoordinateMapping();
     private static final List<Tuple<Coordinate, Integer>> COORDINATE_TUPLE = createCoordinateTuple();
 

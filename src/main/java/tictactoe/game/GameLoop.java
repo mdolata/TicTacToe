@@ -10,13 +10,13 @@ public class GameLoop {
     private int moveCount;
     private Field field;
 
-    public GameLoop(Player[] players) {
+    GameLoop(Player[] players) {
         this.players = players;
         moveCount = 0;
         field = Field.fromCells("         ");
     }
 
-    public State run() {
+    State run() {
         Player currentPlayer;
         do {
             if (moveCount % 2 == 0) {

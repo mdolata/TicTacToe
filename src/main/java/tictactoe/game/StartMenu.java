@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class StartMenu {
     private final Scanner scanner;
     private final CommandValidator commandValidator;
-    private AtomicBoolean isRunning;
+    private final AtomicBoolean isRunning;
     private String lastState;
 
     public StartMenu(Scanner scanner, CommandValidator commandValidator) {
@@ -30,7 +30,7 @@ public class StartMenu {
         }
     }
 
-    public String validateAndRun(String command) {
+    public void validateAndRun(String command) {
         Either<String, String[]> validation = commandValidator.validate(command);
 
         if (validation.isLeft()) {
@@ -49,7 +49,6 @@ public class StartMenu {
             System.out.println(run);
             lastState = "game ended";
         }
-        return lastState;
     }
 
     public boolean isRunning() {

@@ -5,8 +5,6 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 public class CoordinateMappingTest {
 
     @Test
@@ -24,6 +22,6 @@ public class CoordinateMappingTest {
         Map<Coordinate, Integer> coordinateMapping = CoordinateMapping.getCoordinateMapping();
 
         //todo improve test
-        Assert.assertTrue(coordinateMapping.size() == 9);
+        Assert.assertEquals(9, coordinateMapping.size());
     }
 }

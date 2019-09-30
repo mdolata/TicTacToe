@@ -68,7 +68,7 @@ public class Field {
         return String.format("%s\n%s\n%s", horizontal, result.toString().trim(), horizontal);
     }
 
-    State validate() {
+    private State validate() {
         if (isImpossibleState()) {
             return IMPOSSIBLE;
         } else if (isSymbolXWin()) {
@@ -168,13 +168,10 @@ public class Field {
             return true;
         }
 
-        if (Objects.equals(array[2][0], array[1][1]) &&
+        return Objects.equals(array[2][0], array[1][1]) &&
                 Objects.equals(array[2][0], array[0][2]) &&
-                Objects.equals(array[2][0], symbol)) {
-            return true;
-        }
+                Objects.equals(array[2][0], symbol);
 
-        return false;
     }
 
     private boolean isDraw() {
