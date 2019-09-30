@@ -83,6 +83,8 @@ public class Field {
         return UNKNOWN;
     }
 
+
+    //todo move to CoordinateValidator
     public Either<String, Field> nextMove(String coordinates, String nextSymbol) {
         char[] chars = cells.toCharArray();
         Either<String, Coordinate> coordinatesEither = Coordinate.fromString(coordinates);

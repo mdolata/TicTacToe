@@ -1,10 +1,9 @@
-package tictactoe;
+package tictactoe.game;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import tictactoe.game.CommandValidator;
 import tictactoe.util.Either;
 
 import java.util.ArrayList;
@@ -33,13 +32,15 @@ public class CommandValidatorTest {
                 {"not existing commands", badParameters()},
                 {"start exit", badParameters()},
                 {"exit user", badParameters()},
+                {"start bad bad", badParameters()},
+                {"bad easy easy", badParameters()},
+                {"start easy bad", badParameters()},
                 {"nope", badParameters()},
                 {"start user easy", Either.right(new String[]{"start", "user", "easy"})},
                 {"start easy user", Either.right(new String[]{"start", "easy", "user"})},
                 {"start easy easy", Either.right(new String[]{"start", "easy", "easy"})},
                 {"exit", Either.right(new String[]{"exit"})},
         });
-
     }
 
     @Test

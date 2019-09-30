@@ -15,7 +15,6 @@ public class CommandValidator {
         this.supportedFunctionalCommands = supportedFunctionalCommands;
     }
 
-
     public Either<String, String[]> validate(String command) {
         String[] commands = Arrays.stream(command.split(" "))
                 .filter(this::isSupport)
@@ -29,13 +28,7 @@ public class CommandValidator {
             return Either.left("Bad parameters!");
         }
 
-        if (supportedFunctionalCommands.contains(commands[0]) &&
-                supportedLevelCommands.contains(commands[1]) &&
-                supportedLevelCommands.contains(commands[2])) {
-            return Either.right(commands);
-        }
-
-        return Either.left("Bad parameters!");
+        return Either.right(commands);
     }
 
     private boolean isSupport(String command) {
