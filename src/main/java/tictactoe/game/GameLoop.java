@@ -25,7 +25,7 @@ public class GameLoop {
                 currentPlayer = players[1];
             }
 
-            System.out.println(currentPlayer.moveMessage());
+            System.out.print(currentPlayer.moveMessage());
             Either<String, Field> nextField = currentPlayer.nextMove(field);
             if (nextField.isRight()) {
                 moveCount++;

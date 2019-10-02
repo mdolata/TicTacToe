@@ -23,7 +23,7 @@ public class StartMenu {
 
     public void start() {
         while (isRunning.get()) {
-            System.out.println("Input command: ");
+            System.out.print("Input command: ");
             String command = scanner.nextLine();
 
             validateAndRun(command);
