@@ -46,19 +46,19 @@ You can choose the player 1 or player 2 between these
 
 So, for example if you want to play against easy you can type these
 
-```java
+```sh
 Input command: start user easy
 ```
 
 To make bot play first, you can type user as 3rd parameter, like this.
 
-```java
+```sh
 Input command: start medium user
 ```
 
 You can also let bot play against each other, like this.
 
-```java
+```sh
 Input command: start hard hard
 ```
 
@@ -75,7 +75,7 @@ No additional sides can be added to the grid.
 
 In this game, after you select `user` (human player) to play the game, you can type in the coordinates to play the game. You'll be receiving this input command.
 
-```java
+```sh
 Enter the coordinates:
 ```
 
@@ -101,13 +101,13 @@ So if you want to put your piece at the top left of the board like this
 
 You'll need to type in.
 
-```java
+```sh
 Enter the coordinates: 1 3
 ```
 
 The 2nd player can choose anything to block the 1st player. For example choosing the middle tile, you can type in.
 
-```java
+```sh
 Enter the coordinates: 2 2
 ```
 
@@ -123,19 +123,19 @@ The game will continue and so on.
 
 If the tile is already occupied, the game will tell you so.
 
-```java
+```sh
 Enter the coordinates: 1 3
 This cell is occupied! Choose another one!
 ```
 
 If you type in wrong coordinate, the game will also tell you.
 
-```java
+```sh
 Enter the coordinates: 33
 You should two enter numbers with one space!
 ```
 
-```java
+```sh
 Enter the coordinates: 1 4
 Coordinate should be from 1 to 3!
 ```
@@ -144,7 +144,7 @@ Coordinate should be from 1 to 3!
 
 You'll continue until one of the players win like this.
 
-```java
+```sh
 ---------
 | X O X |
 | O O O |
@@ -153,7 +153,7 @@ You'll continue until one of the players win like this.
 O_WINS
 ```
 
-```java
+```sh
 ---------
 | X O X |
 | O X O |
@@ -164,7 +164,7 @@ X_WINS
 
 Or until board is full and no one win, it will be `DRAW`
 
-```java
+```sh
 ---------
 | X O X |
 | O O X |
