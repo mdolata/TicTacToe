@@ -1,11 +1,14 @@
 package tictactoe.game;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tictactoe.board.Field;
 import tictactoe.board.State;
 import tictactoe.player.Player;
 import tictactoe.util.Either;
 
 public class GameLoop {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameLoop.class);
     private final Player[] players;
     private int moveCount;
     private Field field;
@@ -25,14 +28,14 @@ public class GameLoop {
                 currentPlayer = players[1];
             }
 
-            System.out.print(currentPlayer.moveMessage());
+            LOGGER.info(currentPlayer.moveMessage());
             Either<String, Field> nextField = currentPlayer.nextMove(field);
             if (nextField.isRight()) {
                 moveCount++;
                 field = nextField.getRight();
-                System.out.println(field.getPrintableField());
+                LOGGER.info(field.getPrintableField());
             } else {
-                System.out.println(nextField.getLeft());
+                LOGGER.info(nextField.getLeft());
             }
         } while (!field.getState().isTerminal());
 

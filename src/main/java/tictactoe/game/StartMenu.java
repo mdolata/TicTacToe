@@ -1,5 +1,7 @@
 package tictactoe.game;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tictactoe.board.State;
 import tictactoe.player.Player;
 import tictactoe.player.PlayerFactory;
@@ -9,6 +11,7 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartMenu {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartMenu.class);
     private final Scanner scanner;
     private final CommandValidator commandValidator;
     private final AtomicBoolean isRunning;
@@ -23,7 +26,7 @@ public class StartMenu {
 
     public void start() {
         while (isRunning.get()) {
-            System.out.print("Input command: ");
+            LOGGER.info("Input command: ");
             String command = scanner.nextLine();
 
             validateAndRun(command);
@@ -34,7 +37,7 @@ public class StartMenu {
         Either<String, String[]> validation = commandValidator.validate(command);
 
         if (validation.isLeft()) {
-            System.out.println(validation.getLeft());
+            LOGGER.info(validation.getLeft());
             lastState = validation.getLeft();
         } else if ("exit".equals(validation.getRight()[0])) {
             isRunning.set(false);
@@ -46,7 +49,7 @@ public class StartMenu {
 
             GameLoop gameLoop = new GameLoop(new Player[]{player1, player2});
             State run = gameLoop.run();
-            System.out.println(run);
+            LOGGER.info(run.getName());
             lastState = "game ended";
         }
     }
